@@ -5,11 +5,20 @@
 ;;----------------------------------------------------------------------------
 
 (add-to-list 'load-path (concat dotfiles-dir "/custom"))
+(add-to-list 'load-path (concat dotfiles-dir "/rinari"))
+(add-to-list 'load-path (concat dotfiles-dir "/icicles"))
+
+(ido-mode nil)
+(require 'icicles)
+(icicle-mode)
+
 
 (require 'color-theme)
-(load "color-theme-sore-eyes")  
-;(color-theme-sore-eyes)
-    
+(load "color-theme-sore-eyes")
+(color-theme-sore-eyes)
+
+(load "rinari")
+
 ;;----------------------------------------------------------------------------
 ;; Functions
 ;;----------------------------------------------------------------------------
@@ -78,14 +87,14 @@ frames with exactly two windows."
           (set-window-buffer (selected-window) this-win-buffer)
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
-          (if this-win-2nd (other-window 1))))))            
+          (if this-win-2nd (other-window 1))))))
 
 (defun writeroom ()
   "Switches to a WriteRoom-like fullscreen style"
   (interactive)
   (when (featurep 'aquamacs)
     (aquamacs-toggle-full-frame)))
-    
+
 (defalias 'wtf 'describe-mode)
 
 ;;-----------------------------------------------------------------------------
@@ -182,7 +191,7 @@ frames with exactly two windows."
 ;; Interactively Do Things
 ;(ido-mode t)
 ;(ido-mode 'buffer)
-;(setq ido-enable-flex-matching t)
+(setq ido-enable-flex-matching t)
 
 (defun gui-only-settings()
   (message "applying gui-only-settings")
@@ -202,7 +211,7 @@ frames with exactly two windows."
 (if window-system-version
     (gui-only-settings)
     (console-only-settings))
-    
+
 (setenv "EMACS" "t") ; so zsh, screen etc can depend on this
 
 ;;-----------------------------------------------------------------------------

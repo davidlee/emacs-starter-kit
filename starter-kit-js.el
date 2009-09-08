@@ -21,6 +21,9 @@
 (add-hook 'espresso-mode-hook 'idle-highlight)
 (setq espresso-indent-level 2)
 
+;; espresso is not my friend yet
+(add-to-list 'auto-mode-alist '("\\.js$" . javascript-mode))
+
 ;; espresso's insert-and-indent doesn't play nicely with pretty-lambda
 (eval-after-load 'espresso
   '(progn (define-key espresso-mode-map "{" 'paredit-open-brace)

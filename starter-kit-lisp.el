@@ -65,19 +65,19 @@
 
 ;;; Enhance Lisp Modes
 
-(eval-after-load 'paredit
-  '(define-key paredit-mode-map (kbd ";") 'self-insert-command))
+;; (eval-after-load 'paredit
+;;   '(define-key paredit-mode-map (kbd ";") 'self-insert-command))
 
-(dolist (x '(scheme emacs-lisp lisp clojure))
-  (font-lock-add-keywords
-   (intern (concat (symbol-name x) "-mode"))
-   '(("(\\|)" . 'esk-paren-face)))
-  (add-hook
-   (intern (concat (symbol-name x) "-mode-hook"))
-   (lambda ()
-     (paredit-mode +1)
-     (idle-highlight +1)
-     (run-coding-hook))))
+;; (dolist (x '(scheme emacs-lisp lisp clojure))
+;;   (font-lock-add-keywords
+;;    (intern (concat (symbol-name x) "-mode"))
+;;    '(("(\\|)" . 'esk-paren-face)))
+;;   (add-hook
+;;    (intern (concat (symbol-name x) "-mode-hook"))
+;;    (lambda ()
+;;      (paredit-mode +1)
+;;      (idle-highlight +1)
+;;      (run-coding-hook))))
 
 (provide 'starter-kit-lisp)
 ;; starter-kit-lisp.el ends here
