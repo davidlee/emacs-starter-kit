@@ -7,23 +7,30 @@
 (add-to-list 'load-path (concat dotfiles-dir "/custom"))
 (add-to-list 'load-path (concat dotfiles-dir "/rinari"))
 (add-to-list 'load-path (concat dotfiles-dir "/icicles"))
+(add-to-list 'load-path (concat dotfiles-dir "/vendor"))
 
 (ido-mode nil)
 (require 'icicles)
 (icicle-mode)
 
-
 (require 'color-theme)
+(load "color-theme-dml")
 (load "color-theme-sore-eyes")
 (color-theme-sore-eyes)
 
+(add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))
+
+(require 'cucumber-mode)
 (load "rinari")
+
+(require 'js2-mode)
+(require 'shell-toggle)
 
 ;;----------------------------------------------------------------------------
 ;; Functions
 ;;----------------------------------------------------------------------------
 
-(defun kill-buffers ()
+(defun kill-unmodified-buffers ()
   (interactive "")
   "Kill all existing live buffers which have not been modified."
   (setq list (buffer-list))
@@ -106,6 +113,7 @@ frames with exactly two windows."
  auto-fill-mode nil                    ; turn off auto-fill by default
  c-default-style "k&r"                 ;
  c-basic-indent 2
+ c-basic-offset 2                      ; js2-mode uses this for JS indentation level
  column-number-mode 1
  dabbrev-abbrev-skip-leading-regexp "^:"
  dabbrev-case-fold-search nil

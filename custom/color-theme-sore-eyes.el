@@ -73,6 +73,8 @@
 
      (org-special-keyword ((t (:bold t :foreground "#ff0000" :background "#ffffff"))))
      (org-link ((t (:bold t :foreground "red" :background "#ffffff"))))
+     (org-done ((t (:bold t :foreground "darkgreen" :background "#ffffff"))))
+     (org-todo ((t (:bold t :foreground "red" :background "#ffffff"))))
      (org-level-1 (( t(:bold t :foreground "#000000"))))
      (org-level-2 (( t(:foreground "#0033aa"))))
      (org-level-3 (( t(:foreground "#113355"))))
