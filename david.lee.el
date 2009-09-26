@@ -25,6 +25,7 @@
 
 (require 'js2-mode)
 (require 'shell-toggle)
+(require 'fuzzy-match)
 
 ;;----------------------------------------------------------------------------
 ;; Functions
@@ -220,6 +221,13 @@ frames with exactly two windows."
     (gui-only-settings)
     (console-only-settings))
 
+; (setq org-tag-alist '((:startgroup . nil)
+;                       ("@work" . ?w) ("@home" . ?h)
+;                       ("@tennisclub" . ?t)
+;                       (:endgroup . nil)
+;                       ("laptop" . ?l) ("pc" . ?p)))
+
+
 (setenv "EMACS" "t") ; so zsh, screen etc can depend on this
 
 ;;-----------------------------------------------------------------------------
@@ -227,7 +235,6 @@ frames with exactly two windows."
 ;;-----------------------------------------------------------------------------
 
 ;; bindings for built-ins
-
 (global-set-key (kbd "C-<next>")  'next-buffer)
 (global-set-key (kbd "C-<prior>") 'previous-buffer)
 
@@ -264,3 +271,89 @@ frames with exactly two windows."
 (global-set-key [f10] 'diff-buffer-with-file )
 (global-set-key [f11] 'diff-current-buffer-with-file )
 (global-set-key [f12] 'rinari-find-rspec )
+
+
+;; macros
+;;
+;; C-x C-k n (kmacro-name-last-macro)
+;; M-x insert-kbd-macro
+;; C-x C-k b (kmacro-bind-to-key)
+
+
+;; TODO this should be in ruby-mode only
+;; ' => '
+(fset 'insert-right-arrow
+      (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([32 61 62 33554464] 0 "%d")) arg)))
+
+(global-set-key (kbd "C-c ;") 'insert-right-arrow)
+
+;; (when (featurep 'aquamacs)
+;; mac cheat keys - because context switching
+;; Paste, Cut, Copy, Undo, Select-All
+(global-set-key (kbd "M-v") (quote yank))
+(global-set-key (kbd "M-x") (quote kill-region))
+(global-set-key (kbd "M-c") (quote copy-region-as-kill))
+(global-set-key (kbd "M-z") (quote undo))
+(global-set-key (kbd "M-a") (quote mark-whole-buffer))
+(global-set-key (kbd "M-s") 'save-buffer)
+;; )
+
+;; fix js2-mode indentation until it's factored into a minor mode:
+;; http://mihai.bazon.net/projects/editing-javascript-with-emacs-js2-mode
+
+(defun my-js2-indent-function ()
+  (interactive)
+  (save-restriction
+    (widen)
+    (let* ((inhibit-point-motion-hooks t)
+           (parse-status (save-excursion (syntax-ppss (point-at-bol))))
+           (offset (- (current-column) (current-indentation)))
+           (indentation (espresso--proper-indentation parse-status))
+           node)
+
+      (save-excursion
+
+        ;; I like to indent case and labels to half of the tab width
+        ;; (back-to-indentation)
+        ;; (if (looking-at "case\\s-")
+        ;;     (setq indentation (+ indentation (/ espresso-indent-level 2))))
+
+        ;; consecutive declarations in a var statement are nice if
+        ;; properly aligned, i.e:
+        ;;
+        ;; var foo = "bar",
+        ;;     bar = "foo";
+        (setq node (js2-node-at-point))
+        (when (and node
+                   (= js2-NAME (js2-node-type node))
+                   (= js2-VAR (js2-node-type (js2-node-parent node))))
+          (setq indentation (+ 2 indentation))))
+
+      (indent-line-to indentation)
+      (when (> offset 0) (forward-char offset)))))
+
+(defun my-js2-mode-hook ()
+  (require 'espresso)
+  (setq espresso-indent-level 2
+        indent-tabs-mode nil
+        c-basic-offset 2)
+  (c-toggle-auto-state 0)
+  (c-toggle-hungry-state 1)
+  (set (make-local-variable 'indent-line-function) 'my-js2-indent-function)
+  (define-key js2-mode-map [(meta control |)] 'cperl-lineup)
+  (define-key js2-mode-map [(meta control \;)]
+    '(lambda()
+       (interactive)
+       (insert "/* -----[ ")
+       (save-excursion
+         (insert " ]----- */"))
+       ))
+  (define-key js2-mode-map [(return)] 'newline-and-indent)
+  (define-key js2-mode-map [(backspace)] 'c-electric-backspace)
+  (define-key js2-mode-map [(control d)] 'c-electric-delete-forward)
+  (define-key js2-mode-map [(control meta q)] 'my-indent-sexp)
+  (if (featurep 'js2-highlight-vars)
+    (js2-highlight-vars-mode))
+  (message "My JS2 hook"))
+
+(add-hook 'js2-mode-hook 'my-js2-mode-hook)

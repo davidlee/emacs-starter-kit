@@ -16,7 +16,8 @@
   (color-theme-install
    '(color-theme-dml
      ((foreground-color . "#dedede")
-      (background-color . "#191920")
+      ;; (background-color . "#191920")
+      (background-color . "#131510")
       (background-mode . dark))
      (default ((t (nil))))
 
@@ -51,6 +52,11 @@
      (font-lock-variable-name-face ((t (:foreground "PaleGreen"))))
      (font-lock-warning-face ((((class color) (background dark)) (:foreground "yellow" :background "red"))))
 
+     (nxml-attribute-local-name-face ((t (:foreground "#777755"))))
+     (nxml-element-local-name-face ((t (:foreground "#557799"))))
+     (nxml-element-prefix-face ((t (:foreground "#335577"))))
+     (nxml-tag-delimiter-face ((t (:foreground "#997755"))))
+
      (paren-match ((t (:background "red"))))
      (show-paren-match ((t (:foreground "black" :background "red"))))
      (show-paren-match-face ((t (:foreground "black" :background "red"))) t)
@@ -62,17 +68,24 @@
      (speedbar-file-face ((((class color) (background dark)) (:foreground "cyan"))))
      (speedbar-tag-face ((((class color) (background dark)) (:foreground "Springgreen"))))
 
-     ;(hl-line-face ((((class color) (background dark)) (:foreground "#000"))))
-;     (vhdl-speedbar-architecture-selected-face ((((class color) (background dark)) (:underline t :foreground "Blue"))))
-;     (vhdl-speedbar-entity-face ((((class color) (background dark)) (:foreground "darkGreen"))))
-;     (vhdl-speedbar-entity-selected-face ((((class color) (background dark)) (:underline t :foreground "darkGreen"))))
-;     (vhdl-speedbar-package-selected-face ((((class color) (background dark)) (:underline t :foreground "black"))))
-;     (vhdl-speedbar-package-face ((((class color) (background dark)) (:foreground "black"))))
+     (org-special-keyword ((t (:bold t :foreground "#ffffff" ))))
+     (org-link ((t (:bold t :background "red" :foreground "#ffffff"))))
+     (org-done ((t (:bold t :background "darkgreen" :foreground "#ffffff"))))
+     (org-todo ((t (:bold t :background "red" :foreground "#ffffff"))))
+     (org-level-8 (( t(:bold t :foreground "#eeeeee"))))
+     (org-level-7 (( t(:foreground "#0033aa"))))
+     (org-level-6 (( t(:foreground "#113355"))))
+     (org-level-5 (( t(:foreground "#555555"))))
+     (org-level-4 (( t(:foreground "#557799"))))
+     (org-level-3 (( t(:foreground "#777777"))))
+     (org-level-2 (( t(:foreground "#7999aa"))))
+     (org-level-1 (( t(:foreground "#999999"))))
 
      (widget-field ((((class grayscale color) (background light)) (:background "#cfc")))))))
 
 (setq highline-face '(:background "#111"))
 (setq hl-line-face '(:background "#111"))
+(set-cursor-color "red")
 
 (provide 'color-theme-dml)
 (color-theme-dml)

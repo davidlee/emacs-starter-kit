@@ -20,7 +20,7 @@
       (Background-mode . light))
      (default ((t (nil))))
 
-     (region ((t (:foreground "white" :background "#993355"))))
+     (region ((t (:background "#ffffcc"))))
 
      (underline ((t (:foreground "dark orange" :underline t))))
      (modeline ((t (:foreground "#dddddd" :background "#555555"))))
@@ -70,6 +70,11 @@
      (speedbar-directory-face ((((class color) ()) (:foreground "darkgreen"))))
      (speedbar-file-face ((((class color) ()) (:foreground "grey"))))
      (speedbar-tag-face ((((class color) ()) (:foreground "red"))))
+
+     (nxml-attribute-local-name-face ((t (:foreground "#777755"))))
+     (nxml-element-local-name-face ((t (:foreground "#557799"))))
+     (nxml-element-prefix-face ((t (:foreground "#335577"))))
+     (nxml-tag-delimiter-face ((t (:foreground "#997755"))))
 
      (org-special-keyword ((t (:bold t :foreground "#ff0000" :background "#ffffff"))))
      (org-link ((t (:bold t :foreground "red" :background "#ffffff"))))
