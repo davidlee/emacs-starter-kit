@@ -8,10 +8,13 @@
 (add-to-list 'load-path (concat dotfiles-dir "/rinari"))
 (add-to-list 'load-path (concat dotfiles-dir "/icicles"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor"))
+(add-to-list 'load-path (concat dotfiles-dir "/vendor/tuareg-mode"))
 
 (ido-mode nil)
 (require 'icicles)
 (icicle-mode)
+
+(require 'viper) ; just load it, for viper-join-lines
 
 (require 'color-theme)
 (load "color-theme-dml")
@@ -26,6 +29,7 @@
 (require 'js2-mode)
 (require 'shell-toggle)
 (require 'fuzzy-match)
+(require 'linum)
 
 ;;----------------------------------------------------------------------------
 ;; Functions
@@ -161,6 +165,7 @@ frames with exactly two windows."
  uniquify-strip-common-suffix nil
  x-select-enable-clipboard t           ; use system clipboard
  truncate-partial-width-windows nil    ; will truncate even when screen is split into multiple windows
+ linum-format "%4d "
  zone-leave-me-alone t )               ; grr debian
 
 ;; delete extra whitespace on save
@@ -272,6 +277,11 @@ frames with exactly two windows."
 (global-set-key [f11] 'diff-current-buffer-with-file )
 (global-set-key [f12] 'rinari-find-rspec )
 
+;; Indentation help
+(global-set-key (kbd "C-x ^") 'join-line)
+(global-set-key (kbd "C-^") 'join-line)
+(global-set-key (kbd "C-S-j") 'viper-join-lines)
+(global-set-key (kbd "C-M-j") 'join-line)
 
 ;; macros
 ;;
@@ -290,12 +300,12 @@ frames with exactly two windows."
 ;; (when (featurep 'aquamacs)
 ;; mac cheat keys - because context switching
 ;; Paste, Cut, Copy, Undo, Select-All
-(global-set-key (kbd "M-v") (quote yank))
-(global-set-key (kbd "M-x") (quote kill-region))
-(global-set-key (kbd "M-c") (quote copy-region-as-kill))
-(global-set-key (kbd "M-z") (quote undo))
-(global-set-key (kbd "M-a") (quote mark-whole-buffer))
-(global-set-key (kbd "M-s") 'save-buffer)
+;; (global-set-key (kbd "M-v") (quote yank))
+;;(global-set-key (kbd "M-x") (quote kill-region))
+;;(global-set-key (kbd "M-c") (quote copy-region-as-kill))
+;;(global-set-key (kbd "M-z") (quote undo))
+;;(global-set-key (kbd "M-a") (quote mark-whole-buffer))
+;;(global-set-key (kbd "M-s") 'save-buffer)
 ;; )
 
 ;; fix js2-mode indentation until it's factored into a minor mode:

@@ -32,6 +32,8 @@
      (font-lock-comment-face ((t (:foreground "#457" :background "Black"))))
      (bold ((t (:bold))))
 
+     (trailing-whitespace ((((class color)) (:background "#111111"))))
+
      (erb-delim-face ((t (:background "snow3" :foreground "yellow"))))
      (erb-exec-delim-face ((t (:inherit erb-delim-face :background "black" :foreground "red" :weight bold))))
      (erb-exec-face ((t (:inherit erb-face :background "black"))))
