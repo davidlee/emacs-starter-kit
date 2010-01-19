@@ -3,6 +3,7 @@
 ;;----------------------------------------------------------------------------
 ;; Load Libraries
 ;;----------------------------------------------------------------------------
+;;(require 'find-file-in-project)
 
 (add-to-list 'load-path (concat dotfiles-dir "/custom"))
 (add-to-list 'load-path (concat dotfiles-dir "/rinari"))
@@ -10,11 +11,31 @@
 (add-to-list 'load-path (concat dotfiles-dir "/vendor"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor/tuareg-mode"))
 
+(require 'flymake-jslint)
+(add-hook 'javascript-mode-hook
+          (lambda () (flymake-mode t)))
+(add-hook 'js2-mode-hook
+          (lambda () (flymake-mode t)))
+
+;; TODO move to darwin-only config
+(add-to-list 'load-path "/opt/local/lib/erlang/lib/tools-2.6.4/emacs")
+(setq erlang-root-dir "/opt/local/lib/erlang")
+(require 'erlang-start)
+
 (ido-mode nil)
+(require 'filecache)
 (require 'icicles)
 (icicle-mode)
+(require 'rinari)
+(require 'erlang)
+(add-to-list 'auto-mode-alist '("\\.erl$" . erlang-mode))
 
-(require 'viper) ; just load it, for viper-join-lines
+;;(require 'anything)
+;;(require 'proel)
+;;(require 'git)
+
+(setq viper-mode nil)
+(require 'viper)                  ; just load it, for viper-join-lines
 
 (require 'color-theme)
 (load "color-theme-dml")
@@ -22,14 +43,22 @@
 (color-theme-sore-eyes)
 
 (add-to-list 'auto-mode-alist '("\\.feature$" . feature-mode))
-
 (require 'cucumber-mode)
+
 (load "rinari")
 
 (require 'js2-mode)
 (require 'shell-toggle)
 (require 'fuzzy-match)
 (require 'linum)
+
+(add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
+(require 'actionscript-mode)
+
+;; when the carrot doesn't work, it's time for some stick:
+(when (featurep 'tabbar)
+  (tabbar-mode nil))
+(scroll-bar-mode nil)
 
 ;;----------------------------------------------------------------------------
 ;; Functions
@@ -63,15 +92,15 @@
     point is at the end of a symbol, expands it. Else indents the
     current line."
   (interactive)
-    (if (minibufferp)
-        (unless (minibuffer-complete)
-          (dabbrev-expand nil))
-      (if mark-active
-          (indent-region (region-beginning)
-                         (region-end))
-        (if (looking-at "\\_>")
-            (dabbrev-expand nil)
-          (indent-for-tab-command)))))
+  (if (minibufferp)
+      (unless (minibuffer-complete)
+        (dabbrev-expand nil))
+    (if mark-active
+        (indent-region (region-beginning)
+                       (region-end))
+      (if (looking-at "\\_>")
+          (dabbrev-expand nil)
+        (indent-for-tab-command)))))
 
 (defun toggle-window-split ()
   "Vertical split shows more of each line, horizontal split shows
@@ -88,10 +117,10 @@ frames with exactly two windows."
                                      (<= (cadr this-win-edges)
                                          (cadr next-win-edges)))))
              (splitter
-             (if (= (car this-win-edges)
-                    (car (window-edges (next-window))))
-                 'split-window-horizontally
-               'split-window-vertically)))
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
         (delete-other-windows)
         (let ((first-win (selected-window)))
           (funcall splitter)
@@ -114,30 +143,31 @@ frames with exactly two windows."
 ;;-----------------------------------------------------------------------------
 
 (setq-default
+ viper-mode nil
  auto-insert-mode nil                  ; templates for new files
  auto-fill-mode nil                    ; turn off auto-fill by default
  c-default-style "k&r"                 ;
  c-basic-indent 2
- c-basic-offset 2                      ; js2-mode uses this for JS indentation level
+ c-basic-offset 2        ; js2-mode uses this for JS indentation level
  column-number-mode 1
  dabbrev-abbrev-skip-leading-regexp "^:"
  dabbrev-case-fold-search nil
  dabbrev-case-replace nil
- case-fold-search t                    ; case-insensitive search
+ case-fold-search t                     ; case-insensitive search
  comment-auto-fill-only-comments t
- debug-on-error nil                    ; NO! stop interrupting me
+ debug-on-error nil                     ; NO! stop interrupting me
  debug-on-signal nil
  javascript-indent-level 2
  delete-by-moving-to-trash nil
  font-lock-mode t
- font-lock-maximum-decoration t        ; life is a colouring book
- frame-title-format "emacs - %b"       ; show buffer name in title
+ font-lock-maximum-decoration t         ; life is a colouring book
+ frame-title-format "emacs - %b"        ; show buffer name in title
  global-font-lock-mode t
  indent-tabs-mode nil
- inhibit-splash-screen t               ; don't show the ugly buffalo
+ inhibit-splash-screen t                ; don't show the ugly buffalo
  interprogram-paste-function 'x-cut-buffer-or-selection-value
- ls-lisp-dirs-first t                  ; display dirs first in dired
- make-backup-files nil                 ; don't litter
+ ls-lisp-dirs-first t                   ; display dirs first in dired
+ make-backup-files nil                  ; don't litter
  mark-even-if-inactive t
  menu-bar-mode nil
  org-startup-folded nil
@@ -147,14 +177,15 @@ frames with exactly two windows."
  query-replace-highlight t             ; highlight all matches on page
  require-final-newline t               ; can't hurt, can help
  search-highlight t
- set-mark-command-repeat-pop t         ; C-u C-spc-spc-spc ...
+ set-mark-command-repeat-pop t          ; C-u C-spc-spc-spc ...
  scroll-bar-mode nil
  show-paren-mode t
  show-trailing-whitespace t
- truncate-lines t                      ; nowrap
+ truncate-lines t                       ; nowrap
  tab-width 2
  transient-mark-mode nil
  tool-bar-mode nil
+ tabbar-mode nil
  vc-follow-symlinks t                  ; follow symlinks without asking
  viper-mode nil
  viper-inhibit-startup-message t
@@ -283,6 +314,9 @@ frames with exactly two windows."
 (global-set-key (kbd "C-S-j") 'viper-join-lines)
 (global-set-key (kbd "C-M-j") 'join-line)
 
+;; rinari love
+(global-set-key (kbd "M-]") 'rinari-find-file-in-project)
+
 ;; macros
 ;;
 ;; C-x C-k n (kmacro-name-last-macro)
@@ -296,13 +330,14 @@ frames with exactly two windows."
       (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([32 61 62 33554464] 0 "%d")) arg)))
 
 (global-set-key (kbd "C-c ;") 'insert-right-arrow)
+(global-set-key (kbd "C-+") 'align-regexp)
 
 ;; (when (featurep 'aquamacs)
 ;; mac cheat keys - because context switching
 ;; Paste, Cut, Copy, Undo, Select-All
 ;; (global-set-key (kbd "M-v") (quote yank))
 ;;(global-set-key (kbd "M-x") (quote kill-region))
-;;(global-set-key (kbd "M-c") (quote copy-region-as-kill))
+(global-set-key (kbd "M-c") (quote copy-region-as-kill))
 ;;(global-set-key (kbd "M-z") (quote undo))
 ;;(global-set-key (kbd "M-a") (quote mark-whole-buffer))
 ;;(global-set-key (kbd "M-s") 'save-buffer)
@@ -367,3 +402,72 @@ frames with exactly two windows."
   (message "My JS2 hook"))
 
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
+
+;; END
+;;
+;;(setq cscope-do-not-update-database t
+;;      grep-find-template "find .  -type f  -print0 | xargs -0 -e grep  -nH -e "
+;;      anything-sources
+;;        '(proel-anything-projects
+;;          proel-anything-current-project-files))
+;;
+;;(require 'iswitchb)
+;;(defun file-cache-iswitchb-file ()
+;;  "Using iswitchb, interactively open file from file cache'.
+;;First select a file, matched using iswitchb against the contents
+;;in `file-cache-alist'. If the file exist in more than one
+;;directory, select directory. Lastly the file is opened."
+;;  (interactive)
+;;  (let* ((file (file-cache-iswitchb-read "File: "
+;;                                   (mapcar
+;;                                    (lambda (x)
+;;                                      (car x))
+;;                                    file-cache-alist)))
+;;         (record (assoc file file-cache-alist)))
+;;    (find-file
+;;     (concat
+;;      (if (= (length record) 2)
+;;          (car (cdr record))
+;;        (file-cache-iswitchb-read
+;;         (format "Find %s in dir: " file) (cdr record))) file))))
+;;
+;;(defun file-cache-iswitchb-read (prompt choices)
+;;  (let ((iswitchb-make-buflist-hook
+;;	 (lambda ()
+;;	   (setq iswitchb-temp-buflist choices))))
+;;    (iswitchb-read-buffer prompt)))
+;;
+;;(global-set-key "\C-cf" 'file-cache-iswitchb-file)
+;;
+;;;;(defun rails-add-proj-to-file-cache (dir)
+;;;;  "Adds all the ruby and rhtml files recursiely in the current directory to the file-cache"
+;;;;  (interactive "DAdd directory: ")
+;;;;    (file-cache-clear-cache)
+;;;;    (file-cache-add-directory-recursively dir (regexp-opt (list ".rb" ".rhtml" ".xml" ".js" ".yml" ".haml" ".css" ".rake" "Rakefile")))
+;;;;    (file-cache-delete-file-regexp "\\.svn"))
+
+;; (setq rinari-project-subdirs
+;;       '("app" "lib" "config" "test" "public/javascripts" "public/stylesheets" "vendor"))
+;; (defun project-files (&optional file)
+;;   (when (or (not (boundp 'project-files-table))
+;;             (not project-files-table) ; initial load
+;; 	    (not (string-match
+;;                   (expand-file-name (rails-root))
+;;                   (cdar project-files-table)))) ; switched projects
+;;     (setq project-files-table nil)
+;;     (mapc 'populate-project-files-table
+;;           (if file
+;;               (list file)
+;;             (mapcar (lambda (d) (concat (rails-root) "/" d)) rinari-project-subdirs))))
+;;   project-files-table)
+;;
+;; (defadvice populate-project-files-table
+;;   (around populate-project-files-table-ignoring-backups activate)
+;;   "Ignore backup files."
+;;   (if (file-directory-p file)
+;;       (mapc 'populate-project-files-table (directory-files file t "^[^\.#].*[^~]$"))
+;;     ad-do-it))
+;;
+;; (global-set-key "\C-x\C-\M-F" 'find-file-in-project)
+;;
+;; (add-hook ‘ruby-mode-hook (lambda (setl ffip-patterns “.*\\.rb”)))
