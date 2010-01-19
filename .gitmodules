@@ -1,3 +1,6 @@
 [submodule "rinari"]
 	path = rinari
 	url = git://github.com/eschulte/rinari.git
+[submodule "vendor/erlang-mode"]
+	path = vendor/erlang-mode
+	url = git://github.com/smtlaissezfaire/erlang_mode.git
