@@ -288,8 +288,12 @@ frames with exactly two windows."
 (global-set-key "\C-ch" 'hide-lines)
 
 ;; control left / right
-(global-set-key (quote [C-right]) (quote forward-sexp))
-(global-set-key (quote [C-left]) (quote backward-sexp))
+(global-set-key (quote [C-right]) (quote forward-word))
+(global-set-key (quote [C-left]) (quote backward-word))
+
+(global-set-key (quote [M-right]) (quote forward-sexp))
+(global-set-key (quote [M-left]) (quote backward-sexp))
+
 
 (global-set-key (quote [tab]) 'smart-tab)
 
