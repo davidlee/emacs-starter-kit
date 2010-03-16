@@ -18,16 +18,17 @@
           (lambda () (flymake-mode t)))
 
 ;; TODO move to darwin-only config
-(add-to-list 'load-path "/opt/local/lib/erlang/lib/tools-2.6.4/emacs")
-(setq erlang-root-dir "/opt/local/lib/erlang")
-(require 'erlang-start)
+;;(add-to-list 'load-path "/opt/local/lib/erlang/lib/tools-2.6.4/emacs")
+;;(setq erlang-root-dir "/opt/local/lib/erlang")
+;;(require 'erlang-start)
+;;(require 'erlang)
 
 (ido-mode nil)
 (require 'filecache)
 (require 'icicles)
 (icicle-mode)
 (require 'rinari)
-(require 'erlang)
+
 (add-to-list 'auto-mode-alist '("\\.erl$" . erlang-mode))
 
 ;;(require 'anything)
