@@ -3,25 +3,12 @@
 ;;----------------------------------------------------------------------------
 ;; Load Libraries
 ;;----------------------------------------------------------------------------
-;;(require 'find-file-in-project)
 
 (add-to-list 'load-path (concat dotfiles-dir "/custom"))
 (add-to-list 'load-path (concat dotfiles-dir "/rinari"))
 (add-to-list 'load-path (concat dotfiles-dir "/icicles"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor/tuareg-mode"))
-
-(require 'flymake-jslint)
-(add-hook 'javascript-mode-hook
-          (lambda () (flymake-mode t)))
-(add-hook 'js2-mode-hook
-          (lambda () (flymake-mode t)))
-
-;; TODO move to darwin-only config
-;;(add-to-list 'load-path "/opt/local/lib/erlang/lib/tools-2.6.4/emacs")
-;;(setq erlang-root-dir "/opt/local/lib/erlang")
-;;(require 'erlang-start)
-;;(require 'erlang)
 
 (ido-mode nil)
 (require 'filecache)
@@ -31,9 +18,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.erl$" . erlang-mode))
 
-;;(require 'anything)
-;;(require 'proel)
-;;(require 'git)
+;; (require 'git)
 
 (setq viper-mode nil)
 (require 'viper)                  ; just load it, for viper-join-lines
@@ -362,17 +347,6 @@ frames with exactly two windows."
            node)
 
       (save-excursion
-
-        ;; I like to indent case and labels to half of the tab width
-        ;; (back-to-indentation)
-        ;; (if (looking-at "case\\s-")
-        ;;     (setq indentation (+ indentation (/ espresso-indent-level 2))))
-
-        ;; consecutive declarations in a var statement are nice if
-        ;; properly aligned, i.e:
-        ;;
-        ;; var foo = "bar",
-        ;;     bar = "foo";
         (setq node (js2-node-at-point))
         (when (and node
                    (= js2-NAME (js2-node-type node))
@@ -408,71 +382,3 @@ frames with exactly two windows."
 
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
 
-;; END
-;;
-;;(setq cscope-do-not-update-database t
-;;      grep-find-template "find .  -type f  -print0 | xargs -0 -e grep  -nH -e "
-;;      anything-sources
-;;        '(proel-anything-projects
-;;          proel-anything-current-project-files))
-;;
-;;(require 'iswitchb)
-;;(defun file-cache-iswitchb-file ()
-;;  "Using iswitchb, interactively open file from file cache'.
-;;First select a file, matched using iswitchb against the contents
-;;in `file-cache-alist'. If the file exist in more than one
-;;directory, select directory. Lastly the file is opened."
-;;  (interactive)
-;;  (let* ((file (file-cache-iswitchb-read "File: "
-;;                                   (mapcar
-;;                                    (lambda (x)
-;;                                      (car x))
-;;                                    file-cache-alist)))
-;;         (record (assoc file file-cache-alist)))
-;;    (find-file
-;;     (concat
-;;      (if (= (length record) 2)
-;;          (car (cdr record))
-;;        (file-cache-iswitchb-read
-;;         (format "Find %s in dir: " file) (cdr record))) file))))
-;;
-;;(defun file-cache-iswitchb-read (prompt choices)
-;;  (let ((iswitchb-make-buflist-hook
-;;	 (lambda ()
-;;	   (setq iswitchb-temp-buflist choices))))
-;;    (iswitchb-read-buffer prompt)))
-;;
-;;(global-set-key "\C-cf" 'file-cache-iswitchb-file)
-;;
-;;;;(defun rails-add-proj-to-file-cache (dir)
-;;;;  "Adds all the ruby and rhtml files recursiely in the current directory to the file-cache"
-;;;;  (interactive "DAdd directory: ")
-;;;;    (file-cache-clear-cache)
-;;;;    (file-cache-add-directory-recursively dir (regexp-opt (list ".rb" ".rhtml" ".xml" ".js" ".yml" ".haml" ".css" ".rake" "Rakefile")))
-;;;;    (file-cache-delete-file-regexp "\\.svn"))
-
-;; (setq rinari-project-subdirs
-;;       '("app" "lib" "config" "test" "public/javascripts" "public/stylesheets" "vendor"))
-;; (defun project-files (&optional file)
-;;   (when (or (not (boundp 'project-files-table))
-;;             (not project-files-table) ; initial load
-;; 	    (not (string-match
-;;                   (expand-file-name (rails-root))
-;;                   (cdar project-files-table)))) ; switched projects
-;;     (setq project-files-table nil)
-;;     (mapc 'populate-project-files-table
-;;           (if file
-;;               (list file)
-;;             (mapcar (lambda (d) (concat (rails-root) "/" d)) rinari-project-subdirs))))
-;;   project-files-table)
-;;
-;; (defadvice populate-project-files-table
-;;   (around populate-project-files-table-ignoring-backups activate)
-;;   "Ignore backup files."
-;;   (if (file-directory-p file)
-;;       (mapc 'populate-project-files-table (directory-files file t "^[^\.#].*[^~]$"))
-;;     ad-do-it))
-;;
-;; (global-set-key "\C-x\C-\M-F" 'find-file-in-project)
-;;
-;; (add-hook ‘ruby-mode-hook (lambda (setl ffip-patterns “.*\\.rb”)))
