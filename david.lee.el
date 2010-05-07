@@ -1,5 +1,20 @@
 (message "Loading my own stuff")
 
+(set-default-font #("-apple-consolas-medium-r-normal--0-0-0-0-m-0-iso10646-1" 0 15 (face icicle-match-highlight-minibufferbsc) 15 55 nil) nil)
+
+(defmacro de-erc-connect (command server port nick)
+  "Create interactive command `command', for connecting to an IRC server. The
+      command uses interactive mode if passed an argument."
+  (fset command
+        `(lambda (arg)
+           (interactive "p")
+           (if (not (= 1 arg))
+               (call-interactively 'erc)
+             (erc :server ,server :port ,port :nick ,nick)))))
+(autoload 'erc "erc" "" t)
+(de-erc-connect erc-fre "irc.freenode.net" 6666 "resolve")
+(de-erc-connect erc-meo "irc.meobets.com" 6666 "resolve")
+
 ;;----------------------------------------------------------------------------
 ;; Load Libraries
 ;;----------------------------------------------------------------------------
@@ -10,13 +25,24 @@
 (add-to-list 'load-path (concat dotfiles-dir "/vendor"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor/tuareg-mode"))
 
+(add-to-list 'load-path (concat dotfiles-dir "/vendor/rsense"))
+(add-to-list 'load-path (concat dotfiles-dir "/vendor/auto-complete"))
+(setq rsense-home (concat dotfiles-dir "/vendor/rsense"))
+(require 'auto-complete)
+
+(global-set-key (kbd "C-c C-c")  'ac-complete-rsense)
+(global-set-key (kbd "C-c C-v") 'rsense-complete)
+
+
+
 (ido-mode nil)
 (require 'filecache)
 (require 'icicles)
 (icicle-mode)
 (require 'rinari)
+(require 'haml-mode)
 
-(add-to-list 'auto-mode-alist '("\\.erl$" . erlang-mode))
+;; (add-to-list 'auto-mode-alist '("\\.erl$" . erlang-mode))
 
 ;; (require 'git)
 
@@ -37,9 +63,12 @@
 (require 'shell-toggle)
 (require 'fuzzy-match)
 (require 'linum)
+;; (require 'autopair)
+;; (autopair-global-mode) ;; enable autopair in all buffers
 
 (add-to-list 'auto-mode-alist '("\\.as$" . actionscript-mode))
 (require 'actionscript-mode)
+
 
 ;; when the carrot doesn't work, it's time for some stick:
 (when (featurep 'tabbar)
@@ -129,6 +158,7 @@ frames with exactly two windows."
 ;;-----------------------------------------------------------------------------
 
 (setq-default
+ aquamacs-autoface-mode nil            ; use default font everywhere
  viper-mode nil
  auto-insert-mode nil                  ; templates for new files
  auto-fill-mode nil                    ; turn off auto-fill by default
@@ -351,16 +381,16 @@ frames with exactly two windows."
         (when (and node
                    (= js2-NAME (js2-node-type node))
                    (= js2-VAR (js2-node-type (js2-node-parent node))))
-          (setq indentation (+ 2 indentation))))
+          (setq indentation (+ 4 indentation))))
 
       (indent-line-to indentation)
       (when (> offset 0) (forward-char offset)))))
 
 (defun my-js2-mode-hook ()
   (require 'espresso)
-  (setq espresso-indent-level 2
+  (setq espresso-indent-level 4
         indent-tabs-mode nil
-        c-basic-offset 2)
+        c-basic-offset 4)
   (c-toggle-auto-state 0)
   (c-toggle-hungry-state 1)
   (set (make-local-variable 'indent-line-function) 'my-js2-indent-function)
