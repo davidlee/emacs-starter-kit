@@ -1,6 +1,9 @@
 (message "Loading my own stuff")
 
-(set-default-font #("-apple-consolas-medium-r-normal--0-0-0-0-m-0-iso10646-1" 0 15 (face icicle-match-highlight-minibufferbsc) 15 55 nil) nil)
+;;(set-default-font #("-apple-consolas-medium-r-normal--0-0-0-0-m-0-iso10646-1" 0 15 (face icicle-match-highlight-minibufferbsc) 15 55 nil) nil)
+
+
+;; ERC
 
 (defmacro de-erc-connect (command server port nick)
   "Create interactive command `command', for connecting to an IRC server. The
@@ -15,6 +18,27 @@
 (de-erc-connect erc-fre "irc.freenode.net" 6666 "resolve")
 (de-erc-connect erc-meo "irc.meobets.com" 6666 "resolve")
 
+(defvar growlnotify-command (executable-find "growlnotify") "/usr/bin/growlnotify")
+
+(defun growl (title message)
+  (start-process "growl" " growl"
+                 growlnotify-command
+                 title
+                 "-a" "Emacs")
+  (process-send-string " growl" message)
+  (process-send-string " growl" "\n")
+  (process-send-eof " growl"))
+
+(defun my-erc-hook (match-type nick message)
+  "Shows a growl notification, when user's nick was mentioned. If the buffer is currently not visible, makes it sticky."
+  (unless (posix-string-match "^\\** *Users on #" message)
+    (growl
+     (concat "ERC: name mentioned on: " (buffer-name (current-buffer)))
+     message
+     )))
+
+(add-hook 'erc-text-matched-hook 'my-erc-hook)
+
 ;;----------------------------------------------------------------------------
 ;; Load Libraries
 ;;----------------------------------------------------------------------------
@@ -24,7 +48,6 @@
 (add-to-list 'load-path (concat dotfiles-dir "/icicles"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor/tuareg-mode"))
-
 (add-to-list 'load-path (concat dotfiles-dir "/vendor/rsense"))
 (add-to-list 'load-path (concat dotfiles-dir "/vendor/auto-complete"))
 (setq rsense-home (concat dotfiles-dir "/vendor/rsense"))
@@ -33,12 +56,21 @@
 (global-set-key (kbd "C-c C-c")  'ac-complete-rsense)
 (global-set-key (kbd "C-c C-v") 'rsense-complete)
 
-
-
-(ido-mode nil)
-(require 'filecache)
 (require 'icicles)
 (icicle-mode)
+
+;; this path stuff seems to have to happen after icicles is loaded
+(add-to-list 'load-path (concat dotfiles-dir "/vendor/cedet"))
+(add-to-list 'load-path (concat dotfiles-dir "/vendor/ecb"))
+
+(load "common/cedet.el")
+(global-ede-mode 1)                      ; Enable the Project management system
+(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
+(global-srecode-minor-mode 1)            ; Enable template insertion menu
+
+;; 
+(ido-mode nil)
+(require 'filecache)
 (require 'rinari)
 (require 'haml-mode)
 
