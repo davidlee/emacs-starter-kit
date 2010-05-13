@@ -82,8 +82,11 @@
      (org-level-3 (( t(:foreground "#777777"))))
      (org-level-2 (( t(:foreground "#7999aa"))))
      (org-level-1 (( t(:foreground "#999999"))))
-
+     (mumamo-background-chunk-major ((  t(:background "#000000"))))
+     (mumamo-background-chunk-submode1 (( t(:background "#3333333"))))
      (widget-field ((((class grayscale color) (background light)) (:background "#cfc")))))))
+
+
 
 (setq highline-face '(:background "#111"))
 (setq hl-line-face '(:background "#111"))
