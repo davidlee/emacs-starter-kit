@@ -1,7 +1,12 @@
 (message "Loading my own stuff")
 
-;;(set-default-font #("-apple-consolas-medium-r-normal--0-0-0-0-m-0-iso10646-1" 0 15 (face icicle-match-highlight-minibufferbsc) 15 55 nil) nil)
+(set-default-font #("-apple-consolas-medium-r-normal--0-0-0-0-m-0-iso10646-1" 0 15 (face icicle-match-highlight-minibufferbsc) 15 55 nil) nil)
 
+;; twitter
+(autoload 'twitter-get-friends-timeline "twitter" nil t)
+(autoload 'twitter-status-edit "twitter" nil t)
+(global-set-key "\C-xt" 'twitter-get-friends-timeline)
+(add-hook 'twitter-status-edit-mode-hook 'longlines-mode)
 
 ;; ERC
 
@@ -14,9 +19,20 @@
            (if (not (= 1 arg))
                (call-interactively 'erc)
              (erc :server ,server :port ,port :nick ,nick)))))
+
 (autoload 'erc "erc" "" t)
-(de-erc-connect erc-fre "irc.freenode.net" 6666 "resolve")
-(de-erc-connect erc-meo "irc.meobets.com" 6666 "resolve")
+(de-erc-connect erc-fre "irc.freenode.net" 6666 "davidlee")
+(de-erc-connect erc-meo "irc.meobets.com" 6666 "davidlee")
+(erc-autojoin-mode t)
+(setq erc-autojoin-channels-alist
+  '((".*\\.freenode.net" "#emacs" "#roro" "#pancake" "#chef")
+    (".*\\.meobets.com" "#offandracing" "#passengers")))
+;;
+(erc-track-mode t)
+(setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                                 "324" "329" "332" "333" "353" "477"))
+(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
+
 
 (defvar growlnotify-command (executable-find "growlnotify") "/usr/bin/growlnotify")
 
@@ -60,15 +76,16 @@
 (icicle-mode)
 
 ;; this path stuff seems to have to happen after icicles is loaded
-(add-to-list 'load-path (concat dotfiles-dir "/vendor/cedet"))
-(add-to-list 'load-path (concat dotfiles-dir "/vendor/ecb"))
+;;  (add-to-list 'load-path (concat dotfiles-dir "/vendor/cedet"))
+;;  (add-to-list 'load-path (concat dotfiles-dir "/vendor/ecb"))
+;;  (require 'ecb-autoloads)
+;;
+;;  (load "common/cedet.el")
+;;  (global-ede-mode 1)                      ; Enable the Project management system
+;;  (semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
+;;  (global-srecode-minor-mode 1)            ; Enable template insertion menu
 
-(load "common/cedet.el")
-(global-ede-mode 1)                      ; Enable the Project management system
-(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
-(global-srecode-minor-mode 1)            ; Enable template insertion menu
-
-;; 
+;;
 (ido-mode nil)
 (require 'filecache)
 (require 'rinari)
