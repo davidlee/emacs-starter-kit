@@ -8,6 +8,7 @@
 (global-set-key "\C-xt" 'twitter-get-friends-timeline)
 (add-hook 'twitter-status-edit-mode-hook 'longlines-mode)
 
+
 ;; ERC
 
 (defmacro de-erc-connect (command server port nick)
@@ -334,6 +335,9 @@ frames with exactly two windows."
 ;;-----------------------------------------------------------------------------
 ;; Keybindings
 ;;-----------------------------------------------------------------------------
+
+(if(featurep 'ns-toggle-fullscreen)
+    (global-set-key (kbd "M-RET") 'ns-toggle-fullscreen))
 
 ;; bindings for built-ins
 (global-set-key (kbd "C-<next>")  'next-buffer)
